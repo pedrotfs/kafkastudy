@@ -10,10 +10,7 @@ public class ProducerCallBack implements Callback {
     private static Logger LOG = LoggerFactory.getLogger(ProducerCallBack.class);
 
     public void onCompletion(RecordMetadata recordMetadata, Exception e) {
-        LOG.info("Topic: " + recordMetadata.topic());
-        LOG.info("Partition: " + recordMetadata.partition());
-        LOG.info("Offset: " + recordMetadata.offset());
-        LOG.info("Timestamp: " + recordMetadata.timestamp());
+        LOG.info("topic: " + recordMetadata.topic() + " - Prt: " + recordMetadata.partition() + " - Tms: " + recordMetadata.timestamp() + " - Off: " + recordMetadata.offset());
         if(e != null)
         {
             LOG.error("something went wrong.");

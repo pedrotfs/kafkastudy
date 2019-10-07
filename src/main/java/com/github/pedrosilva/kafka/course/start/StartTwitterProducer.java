@@ -1,8 +1,12 @@
 package com.github.pedrosilva.kafka.course.start;
 
 
+import com.github.pedrosilva.kafka.course.producer.KafkaProducerFactory;
 import com.github.pedrosilva.kafka.course.util.HoseBirdClientUtil;
 import com.twitter.hbc.core.Client;
+import org.apache.kafka.clients.producer.Callback;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +19,8 @@ import java.util.concurrent.TimeUnit;
 public class StartTwitterProducer {
 
     private static final int CAPACITY = 100000;
+
+    private static final String TOPIC = "tweets";
 
     private static Logger LOG = LoggerFactory.getLogger(StartTwitterProducer.class);
 
@@ -35,6 +41,10 @@ public class StartTwitterProducer {
         LOG.info("Attempting to connect");
         client.connect();
 
+        KafkaProducerFactory producerFactory = new KafkaProducerFactory();
+        KafkaProducer<String, String> producer = producerFactory.createProducer();
+
+
         // on a different thread, or multiple different threads....
         while (!client.isDone()) {
             String message = null;
@@ -46,15 +56,23 @@ public class StartTwitterProducer {
             }
             if(message != null)
             {
-                LOG.info(message);
+                handleMessage(message, producer, producerFactory.createProducerRecord(message, null, TOPIC), producerFactory.getProducerCallBack());
             }
         }
+        client.stop();
+        producer.close();
     }
+
+    private void handleMessage(String message, KafkaProducer<String, String> producer, ProducerRecord<String, String> record, Callback callBack) {
+        LOG.info(message);
+        producer.send(record, callBack);
+    }
+
 
     private List<String> getSearchTermList()
     {
         List<String> list = new ArrayList<>();
-        list.add("petr4");
+        list.add("beatles");
         return list;
     }
 }
