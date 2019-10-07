@@ -1,8 +1,7 @@
 package com.github.pedrosilva.kafka.course.producer;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import com.github.pedrosilva.kafka.course.producer.callback.ProducerCallBack;
+import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
@@ -65,6 +64,11 @@ public class KafkaProducerFactory {
     public ProducerRecord<String, String> createProducerRecord(final String value, final String topic)
     {
         return new ProducerRecord<String, String>(topic, value);
+    }
+
+    public Callback getProducerCallBack()
+    {
+        return new ProducerCallBack();
     }
 
 }
