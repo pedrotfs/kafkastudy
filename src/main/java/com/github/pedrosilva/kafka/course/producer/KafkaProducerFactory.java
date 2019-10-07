@@ -12,7 +12,7 @@ public class KafkaProducerFactory {
 
     private static final String DEFAULT_BOOTSTRAP_SERVER_PORT = "9092";
 
-    private static final String DEFAULT_TOPIC = "first_topic";
+    public static final String DEFAULT_TOPIC = "first_topic";
 
     public Properties createProperties() {
         Properties properties = new Properties();
@@ -61,9 +61,14 @@ public class KafkaProducerFactory {
         return new ProducerRecord<String, String>(DEFAULT_TOPIC, value);
     }
 
-    public ProducerRecord<String, String> createProducerRecord(final String value, final String topic)
+    public ProducerRecord<String, String> createProducerRecord(final String value, final String key)
     {
-        return new ProducerRecord<String, String>(topic, value);
+        return new ProducerRecord<String, String>(DEFAULT_TOPIC, key, value);
+    }
+
+    public ProducerRecord<String, String> createProducerRecord(final String value, final String key, final String topic)
+    {
+        return new ProducerRecord<String, String>(topic, key, value);
     }
 
     public Callback getProducerCallBack()
