@@ -2,7 +2,9 @@ package com.github.pedrosilva.kafka.course.consumer;
 
 import com.github.pedrosilva.kafka.course.util.KafkaCourseUtils;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -64,5 +66,16 @@ public class KafkaConsumerFactory {
 
     private void subscribeToDefaultTopic(KafkaConsumer<String, String> consumer, final String topic) {
         consumer.subscribe(Collections.singletonList(topic));
+    }
+
+    public KafkaConsumer<String, String> createConsumerAssignSeek(final int partition, final String topic, long offset)
+    {
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(KafkaCourseUtils.createPropertiesConsumerWithoutGroup());
+        String topicUsed = null;
+        topicUsed = topic != null ? topic : DEFAULT_TOPIC;
+        TopicPartition topicPartition = new TopicPartition(topicUsed, partition);
+        consumer.assign(Collections.singletonList(topicPartition));
+        consumer.seek(topicPartition, offset);
+        return consumer;
     }
 }
