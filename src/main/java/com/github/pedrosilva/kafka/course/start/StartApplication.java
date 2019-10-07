@@ -3,6 +3,7 @@ package com.github.pedrosilva.kafka.course.start;
 import com.github.pedrosilva.kafka.course.consumer.KafkaConsumerFactory;
 import com.github.pedrosilva.kafka.course.producer.KafkaProducerFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class StartApplication {
 
     private static final int KEY_FACTOR = 5; //same key same partition
 
-    private static final long MILLI_SECONDS_POLL = 2000;
+    private static final long MILLI_SECONDS_POLL = 10000;
 
     public static void main(String[] args)
     {
@@ -33,12 +34,30 @@ public class StartApplication {
 
     private static void messageConsuption() {
         LOG.info("begin consuming.");
-        ConsumerRecords<String, String> records = new KafkaConsumerFactory().createConsumer().poll(Duration.ofMillis(MILLI_SECONDS_POLL));
+        final KafkaConsumerFactory consumerFactory = new KafkaConsumerFactory();
+//        consumeAssingSeek(consumerFactory); //consume assign seek
+        consume(consumerFactory);
+        LOG.info("end consuming.");
+    }
+
+    private static void consumeAssingSeek(KafkaConsumerFactory consumerFactory) {
+        final KafkaConsumer<String, String> consumerAssignSeek = consumerFactory.createConsumerAssignSeek(0, null, 10);
+        ConsumerRecords<String, String> records = consumerAssignSeek.poll(Duration.ofMillis(MILLI_SECONDS_POLL));
         records.forEach(r -> {
             LOG.info("Key: " + r.key() + " - Val: " + r.value());
             LOG.info("Prt: " + r.partition() + " - Tms: " + r.timestamp() + " - Off: " + r.offset());
         });
-        LOG.info("end consuming.");
+        consumerAssignSeek.close();
+    }
+
+    private static void consume(KafkaConsumerFactory consumerFactory) {
+        final KafkaConsumer<String, String> consumer = consumerFactory.createConsumer();
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(MILLI_SECONDS_POLL));
+        records.forEach(r -> {
+            LOG.info("Key: " + r.key() + " - Val: " + r.value());
+            LOG.info("Prt: " + r.partition() + " - Tms: " + r.timestamp() + " - Off: " + r.offset());
+        });
+        consumer.close();
     }
 
     private static void messageProduction(KafkaProducerFactory factory, KafkaProducer<String, String> producer) {

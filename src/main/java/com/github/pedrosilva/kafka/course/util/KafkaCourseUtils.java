@@ -53,6 +53,14 @@ public class KafkaCourseUtils {
         return properties;
     }
 
+    public static Properties createPropertiesConsumerWithoutGroup() {
+        Properties properties = new Properties();
+        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, DEFAULT_BOOTSTRAP_SERVER_VALUE + ":" + DEFAULT_BOOTSTRAP_SERVER_PORT);
+        properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OFFSET_RESET_VALUE);
+        setSerializerPropertiesConsumer(properties);
+        return properties;
+    }
+
     private static void setSerializerPropertiesProducer(Properties properties) {
         properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
