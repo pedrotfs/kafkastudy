@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -37,7 +38,12 @@ public class StartTwitterProducer {
         BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>(CAPACITY);
 
         LOG.info("Starting. Creating client.");
-        Client client = HoseBirdClientUtil.createHBCClient(messageQueue, getSearchTermList());
+        Client client = null;
+        try {
+            client = HoseBirdClientUtil.createHBCClient(messageQueue, getSearchTermList());
+        } catch (IOException e) {
+            LOG.error("error reading config", e);
+        }
         LOG.info("Attempting to connect");
         client.connect();
 

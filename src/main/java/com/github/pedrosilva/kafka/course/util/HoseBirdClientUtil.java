@@ -10,20 +10,15 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 
 public class HoseBirdClientUtil {
 
-    private static final String CONSUMER_KEY = "YNORZQ5aLmJOMI3U3ucuinzCJ";
-
-    private static final String CONSUMER_SECRET = "rc7irDSiPvtU4gN0VCtko2tw7f1Gt6UrZXshvsIvwRgZTjAQq0";
-
-    private static final String TOKEN = "1181280371184472066-FdI4sj6ilgsXrGqP6NapvGCRIyEqtn";
-
-    private static final String SECRET = "ryW20gmifpszk2XmnKFOh1s07FhqA3aShVjjg8PO6QyDs";
-
-    public static Client createHBCClient(BlockingQueue<String> messageQueue, List<String> searchTerms) {
+    public static Client createHBCClient(BlockingQueue<String> messageQueue, List<String> searchTerms) throws IOException {
         // Declare the host you want to connect to, the endpoint, and authentication (basic auth or oauth) */
         Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
@@ -33,8 +28,10 @@ public class HoseBirdClientUtil {
         //        hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(searchTerms);
 
+        Properties properties = getTwitterProperties();
+
         // These secrets should be read from a config file
-        Authentication hosebirdAuth = new OAuth1(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, SECRET);
+        Authentication hosebirdAuth = new OAuth1(properties.getProperty("consumer.key"), properties.getProperty("consumer.secret"), properties.getProperty("token"), properties.getProperty("token.secret"));
 
         ClientBuilder builder = new ClientBuilder()
                 .name("Hosebird-Client-01")                              // optional: mainly for the logs
@@ -46,5 +43,13 @@ public class HoseBirdClientUtil {
 
         // Attempts to establish a connection.
         return builder.build();
+    }
+
+    private static Properties getTwitterProperties() throws IOException
+    {
+        InputStream input = HoseBirdClientUtil.class.getClassLoader().getResourceAsStream("config.properties");
+        Properties properties = new Properties();
+        properties.load(input);
+        return properties;
     }
 }
