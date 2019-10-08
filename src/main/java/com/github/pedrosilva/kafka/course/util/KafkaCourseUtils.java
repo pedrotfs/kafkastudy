@@ -9,9 +9,9 @@ import java.util.Properties;
 
 public class KafkaCourseUtils {
 
-    private static final String DEFAULT_BOOTSTRAP_SERVER_VALUE = "127.0.0.1";
+    public static final String DEFAULT_BOOTSTRAP_SERVER_VALUE = "127.0.0.1";
 
-    private static final String DEFAULT_BOOTSTRAP_SERVER_PORT = "9092";
+    public static final String DEFAULT_BOOTSTRAP_SERVER_PORT = "9092";
 
     private static final String DEFAULT_GROUP = "my-first-app";
 

@@ -26,7 +26,7 @@ public class KafkaConsumerFactory {
     }
 
     public Properties createProperties(final String groupId, final String bootstrapServer, final String port) {
-        return KafkaCourseUtils.createPropertiesConsumer(bootstrapServer, port);
+        return KafkaCourseUtils.createPropertiesConsumer(groupId, bootstrapServer, port);
     }
 
     public KafkaConsumer<String, String> createConsumer()
