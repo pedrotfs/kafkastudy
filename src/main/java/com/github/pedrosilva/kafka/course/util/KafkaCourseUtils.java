@@ -17,6 +17,10 @@ public class KafkaCourseUtils {
 
     private static final String OFFSET_RESET_VALUE = "earliest"; //or latest or none
 
+    private static final String COMPRESSION = "snappy";
+
+    private static final int BATCH_SIZE = 32 * 1024;
+
     public static Properties createPropertiesProducer() {
         return createPropertiesProducer(DEFAULT_BOOTSTRAP_SERVER_VALUE);
     }
@@ -71,7 +75,10 @@ public class KafkaCourseUtils {
         properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
         properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
 
-//        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, );
+        //high throughput producer with more cost to cpu and latency
+        properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, COMPRESSION);
+        properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "20");
+        properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(BATCH_SIZE));
     }
 
     private static void setSerializerPropertiesConsumer(Properties properties) {

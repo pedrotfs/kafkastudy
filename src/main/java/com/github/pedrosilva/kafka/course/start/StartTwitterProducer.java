@@ -75,7 +75,6 @@ public class StartTwitterProducer {
         producer.send(record, callBack);
     }
 
-
     private List<String> getSearchTermList()
     {
         List<String> list = new ArrayList<>();
