@@ -55,18 +55,18 @@ public class StartElasticConsumer {
         }
     }
 
-    private void consumeKafkaFeed(KafkaConsumer<String, String> consumer, RestHighLevelClient client) {
+    private void consumeKafkaFeed(KafkaConsumer<String, String> consumer, RestHighLevelClient client) throws IOException {
         while(true){
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(10000));
             records.forEach(r -> {
                 LOG.info("Key: " + r.key() + " - Val: " + r.value());
                 LOG.info("Prt: " + r.partition() + " - Tms: " + r.timestamp() + " - Off: " + r.offset());
 
-                IndexRequest indexRequest = new IndexRequest(INDEX, INDEX_TYPE).source(r.value(), XContentType.JSON);
+                IndexRequest indexRequest = new IndexRequest(INDEX, INDEX_TYPE, retrieveIdempotentId(r.topic(), r.partition(), r.offset())).source(r.value(), XContentType.JSON);
                 IndexResponse indexResponse = null;
                 try {
                     indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-                    LOG.info("response id : " + indexResponse.getId());
+
                 } catch (IOException e) {
                     LOG.error("why cant I just throw this?");
                 } catch (ElasticsearchException e)
@@ -74,6 +74,13 @@ public class StartElasticConsumer {
                     LOG.info("Key: " + r.key() + " - Val: " + r.value() + "has given an exception indexing!!!!!!!!!!!");
                 }
             });
+            //consumer.commitSync(); // use it with auto commit config as false
+            LOG.info("batch ended. geting next batch of " + records.count());
         }
+    }
+
+    private String retrieveIdempotentId(final String topic, final int partition, final long offset)
+    {
+        return topic + "." + partition + "." + offset; //kafka generic ID
     }
 }
