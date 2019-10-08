@@ -1,5 +1,6 @@
-package com.github.pedrosilva.kafka.course.util;
+package com.github.pedrosilva.kafka.course.twitter.producer.utils;
 
+import com.github.pedrosilva.kafka.course.util.PropertyLoader;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Client;
 import com.twitter.hbc.core.Constants;
@@ -11,7 +12,6 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -28,7 +28,7 @@ public class HoseBirdClientUtil {
         //        hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(searchTerms);
 
-        Properties properties = getTwitterProperties();
+        Properties properties = PropertyLoader.getConfigurations();
 
         // These secrets should be read from a config file
         Authentication hosebirdAuth = new OAuth1(properties.getProperty("consumer.key"), properties.getProperty("consumer.secret"), properties.getProperty("token"), properties.getProperty("token.secret"));
@@ -45,11 +45,4 @@ public class HoseBirdClientUtil {
         return builder.build();
     }
 
-    private static Properties getTwitterProperties() throws IOException
-    {
-        InputStream input = HoseBirdClientUtil.class.getClassLoader().getResourceAsStream("config.properties");
-        Properties properties = new Properties();
-        properties.load(input);
-        return properties;
-    }
 }

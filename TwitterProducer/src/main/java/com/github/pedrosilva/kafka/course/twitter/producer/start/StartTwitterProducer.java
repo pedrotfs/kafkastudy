@@ -1,8 +1,8 @@
-package com.github.pedrosilva.kafka.course.start;
+package com.github.pedrosilva.kafka.course.twitter.producer.start;
 
 
 import com.github.pedrosilva.kafka.course.producer.KafkaProducerFactory;
-import com.github.pedrosilva.kafka.course.util.HoseBirdClientUtil;
+import com.github.pedrosilva.kafka.course.twitter.producer.utils.HoseBirdClientUtil;
 import com.twitter.hbc.core.Client;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
