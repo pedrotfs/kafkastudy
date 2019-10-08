@@ -84,5 +84,7 @@ public class KafkaCourseUtils {
     private static void setSerializerPropertiesConsumer(Properties properties) {
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true"); //set to false to use commit command
+        properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "100"); //10 em 10
     }
 }
