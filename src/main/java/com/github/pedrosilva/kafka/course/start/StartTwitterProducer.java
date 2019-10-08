@@ -38,11 +38,12 @@ public class StartTwitterProducer {
         BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>(CAPACITY);
 
         LOG.info("Starting. Creating client.");
-        Client client = null;
+        Client client;
         try {
             client = HoseBirdClientUtil.createHBCClient(messageQueue, getSearchTermList());
         } catch (IOException e) {
             LOG.error("error reading config", e);
+            return;
         }
         LOG.info("Attempting to connect");
         client.connect();
