@@ -21,13 +21,13 @@ public class StartElasticConsumer {
 
     private Logger LOG = LoggerFactory.getLogger(StartElasticConsumer.class);
 
-    private static final String INDEX = "twitter";
+    private static final String INDEX = "twitter"; //elastic search. create at bonsai.io
 
-    private static final String INDEX_TYPE = "tweets";
+    private static final String INDEX_TYPE = "tweets"; //elastic search. create at bonsai.io
 
     private static final String CONSUMER_GROUP = "elasticsearch-tweets";
 
-    private static final String CONSUMER_TOPIC = "tweets";
+    private static final String CONSUMER_TOPIC = "tweets"; //please create the topic first. 6 partitions, replication factor 3
 
     private StartElasticConsumer() {
         //OK

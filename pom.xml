@@ -23,6 +23,7 @@
     <modules>
         <module>TwitterProducer</module>
         <module>ElasticReader</module>
+        <module>KafkaStreams</module>
     </modules>
     <dependencies>
 

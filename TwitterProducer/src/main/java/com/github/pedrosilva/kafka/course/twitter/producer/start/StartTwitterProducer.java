@@ -21,7 +21,7 @@ public class StartTwitterProducer {
 
     private static final int CAPACITY = 100000;
 
-    private static final String TOPIC = "tweets";
+    private static final String TOPIC = "tweets"; //please create the topic first 6p 3r
 
     private static Logger LOG = LoggerFactory.getLogger(StartTwitterProducer.class);
 
