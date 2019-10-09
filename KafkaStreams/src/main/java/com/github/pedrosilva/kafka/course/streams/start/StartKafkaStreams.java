@@ -5,6 +5,8 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 
+import java.util.Collections;
+
 public class StartKafkaStreams {
 
     private static final int FOLLOWERS = 10000;
@@ -26,7 +28,7 @@ public class StartKafkaStreams {
     private void run()
     {
         StreamsBuilder streamsBuilder = new StreamsBuilder();
-        KStream<String, String> inputTopic = streamsBuilder.stream(TOPIC_ORIGIN);
+        KStream<String, String> inputTopic = streamsBuilder.stream(Collections.singletonList(TOPIC_ORIGIN));
         KStream<String, String> filteredStream = inputTopic.filter(
                 (k, tweet) -> StreamUtils.extractFollowerCountFromTweet(tweet) > FOLLOWERS
         );
